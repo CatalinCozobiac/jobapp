@@ -3,18 +3,21 @@ const { name } = require('ejs');
 const req = require('express/lib/request');
 const { append } = require('express/lib/response');
 const res = require('express/lib/response');
-// const Student=require('../models/studentModel');
-const job = require('../models/job');
+const Job = require('../models/job');
 const User  = require('../models/user')
 const bcrypt = require('bcrypt');
 const morgan = require('morgan');
+var multer = require('multer');
+const path = require("path");
+const fs = require('fs');
+
 
 //const e = require('connect-flash');
 
 var sessionChecker= async (req, res, next)=>{
     //console.log(req)
     if(req.cookies.user_sid && !req.session.user){
-        const jobs = await job.find({})
+        const jobs = await Job.find({})
         res.render('student_data', { session: req.session.user, jobs: {jobs}})
     }else {
         next()
@@ -22,17 +25,33 @@ var sessionChecker= async (req, res, next)=>{
 
 
 }
+
+//for image storage
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+ 
+var upload = multer({ storage: storage });
+
 exports.HomePage= async (req, res) =>{
-    const jobs = await job.find({})
+    const jobs = await Job.find({})
     console.log(jobs)
     res.render('index', { session: req.session.user, jobs: {jobs}});
 
+
 }
 
-exports.AboutPage= async (req, res) =>{
-    const jobs = await job.find({})
+exports.DashBoard= async (req, res) =>{
+    const jobs = await Job.find({})
     console.log(jobs)
-    res.render('about', { session: req.session.user, jobs: {jobs}});
+    res.render('dashboard', { session: req.session.user, jobs: {jobs}});
+
+    
 
 }
 // create form view
@@ -41,67 +60,92 @@ exports.CreatePage = (sessionChecker, (req, res) =>{
     if(!req.cookies.user_sid && req.session.user){
         res.render('login', {user: req.user,session: req.session.user})
     }else {
-        res.render('create_student',{ session: req.session.user})
+        res.render('create_job',{ session: req.session.user})
+
+
     }
+
 
 
 })
 
-// // submit form (store data in database)
-// exports.CreateStudent= async (req, res)=>{
+// submit form (store data in database)
+exports.upload= upload.single('images');
 
-//    //console.log(req.body);
-//     let name =req.body.name
-//     let email =req.body.email
-//     if(email !=''&& name !=''){
-//         const student = new Student({
-//             name:name,
-//             email:email
-//         })
-//             student.save()
-//         }else{
-//     }
-//     console.log('student data created')
-//     const students = await Student.find({})
-//     res.render('student_data', { session: req.session.user,students: {students}});
-// }
+exports.CreateJob= async (req, res, next)=>{
+    const files = req.files;
 
-// // Edit Student
-// exports.UpdateStudentPage= async (req, res)=>{
-//     console.log(req.params.id);
-//     const id = req.params.id;
-//     const student = await Student.findById({_id:id})
-//     res.render('edit_student', { session: req.session.user,student: {student}});
+   //console.log(req.body);
+    let name =req.body.name
+    let email =req.body.email
+    let location = req.body.location
+    let jobd = req.body.jobd
+    let img =  {
+        data: fs.readFileSync(path.join('uploads/' + req.file.filename)),
+        contentType: 'image/png'
+    }
+    if(name !=''&& email !=''&& location  !='' && jobd !='' && img!=''){
+        const job = new Job({
+            subcontName:name,
+            subcontEmail:email,
+            jobLocation:location,
+            jobDescription:jobd,
+            img:img,
 
-// }
-// // Edit Student Action
-// exports.UpdateStudent=async (req, res)=>{
+        })
+            job.save()
+        }else{
+            res.render('dashboard', { session: req.session.user, jobs: {jobs}});
+    }
+    console.log('job data created')
+    const jobs = await Job.find({})
+    res.render('dashboard', { session: req.session.user, jobs: {jobs}});
 
-//     try {
-//         const student = await Student.updateOne({_id:req.params.id, name:req.body.name, email:req.body.email})
-//         console.log(student)
-//         const students = await Student.find({})
-//         res.render('student_data', { session: req.session.user,students: {students}})
-//     } catch (error) {
-//         console.log(error)
+}
 
-//     }
-// }
+// Edit Job
+exports.UpdateJobPage= async (req, res)=>{
+    console.log(req.params.id);
+    const id = req.params.id;
+    const job = await Job.findById({_id:id})
+    res.render('edit_job', { session: req.session.user,job: {job}});
+
+}
+// Edit Student Action
+exports.UpdateJob=async (req, res)=>{
+
+    try {
+        const job = await Job.updateOne({
+            _id:req.params.id, 
+            subcontName:req.body.name, 
+            subcontEmail:req.body.email,
+            jobLocation:req.body.location,
+            jobDescription:req.body.jobd,})
+
+            
+        console.log(job)
+        const jobs = await Job.find({})
+        res.render('dashboard', { session: req.session.user,jobs: {jobs}})
+    } catch (error) {
+        console.log(error)
+
+    }
+}
 
 
-// // Delete
-// exports.DeleteStudent=async(req, res)=>{
-//     if(!req.cookies.user_sid && req.session.user){
-//         res.render('login',{ session: req.session.user})
-//     }
-//     console.log(req.params.id);
-//     const id = req.params.id;
-//     const student =await Student.deleteOne({ _id: id });
-//     console.log(student);
-//     const students = await Student.find({})
-//     res.render('student_data', { session: req.session.user,students: {students}})
+// Delete
+exports.DeleteJob=async(req, res)=>{
+    if(!req.cookies.user_sid && req.session.user){
+        res.render('login',{ session: req.session.user})
+    }
+    console.log(req.params.id);
+    const id = req.params.id;
+    const job =await Job.deleteOne({ _id: id });
+    console.log(job);
+    const jobs = await Job.find({})
+    res.render('dashboard', { session: req.session.user,jobs: {jobs}})
 
-// }
+}
 // create form view
 exports.RegisterPage=(req, res)=>{
 
@@ -150,7 +194,7 @@ exports.RegisterUser= async (req,res)=>{
         }
 
         await user.comparePassword(req.body.password, async(error,match)=>{
-            const users = await User.find({})
+            const jobs = await Job.find({})
             
             if (!match){
                 console.log("fail")
@@ -158,27 +202,12 @@ exports.RegisterUser= async (req,res)=>{
                 return;
             }
                     req.session.user = user
-                    res.render('about', {  session: req.session.user, users:{users}})
-                    console.log("success")
-        //     req.session.user = user
-        //     res.render('about', {  session: req.session.user, users:{users}})
-        //     console.log("success")
-        //     // .then
-        //     // const admin = await User.findOne ({admin})
-        //     //     
+                    res.render('dashboard', {  session: req.session.user, jobs:{jobs}})
+                    console.log("success") 
         })
         
     }
 
-    exports.AdminCheck = async (req,res) => {
-        const user = await User.findOne ({admin})
-        const admin = user.admin
-        if ( admin == true) {
-            console.log("admin", admin)
-
-        }
-        console.log("not admin", admin)
-    }
 
     //logout
 

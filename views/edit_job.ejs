@@ -1,0 +1,85 @@
+<h2>Update Job</h2>
+<form method="POST" action="../edit_job/<%- job.job._id %>">
+  <form method="POST" id="" action="create_job">
+    <p style="color: crimson;">Make sure you fill all fields and not leave placeholders empty.</p>
+    <div class="form-group">
+        <label for="subcontName"><b>Subcontractor Name</b></label>
+        <input type="text" class="form-control" name="name" placeholder="<%- job.job.subcontName %>">
+      </div>
+    <div class="form-group">
+        <label for="subcontEmail"><b>Email address</b></label>
+        <input type="email" class="form-control"  name="email" placeholder="<%- job.job.subcontEmail %>">
+      </div>
+      <div class="form-group">
+        <label for="jobLocation"><b>Job Location: </b></label>
+        <input type="text" class="form-control"  name="location" placeholder="<%- job.job.jobLocation %>">
+      </div>
+      <b>Old description:</b>
+      <div class="card" style="border-width: 2px;"> <div style="padding: 15px"><p><%- job.job.jobDescription %></p></div></div>
+
+      <div class="form-group">
+        <label for="jobDescription"><b>New Description:</b></label>
+        <textarea type="text" class="form-control"  name="jobd"></textarea>
+      </div>
+      <br>
+      <button class="btn btn-primary">Submit Job</button>
+  
+  </form>
+ 
+        <!-- <h6><%- job.subcontEmail %></h6> -->
+ 
+
+      <!-- <div class="container">
+        <div class="row">
+          <div class="col-sm-20 mt-52">
+            <label>Upload image</label>
+  
+            <form class="mt-4"
+              action="/upload"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <div class="form-group">
+                <input
+                  type="file"
+                  name="file"
+                  multiple
+                  id="input-files"
+                  class="form-control-file border"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Add picture</button>
+            </form>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="preview-images"></div>
+          </div>
+        </div>
+      </div>
+  
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script>
+        $(document).ready(function() {
+          let imagesPreview = function(input, placeToInsertImagePreview) {
+            if (input.files) {
+              let filesAmount = input.files.length;
+              for (i = 0; i < filesAmount; i++) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                  $($.parseHTML("<img>"))
+                    .attr("src", event.target.result)
+                    .appendTo(placeToInsertImagePreview);
+                };
+                reader.readAsDataURL(input.files[i]);
+              }
+            }
+          };
+          $("#input-files").on("change", function() {
+            imagesPreview(this, "div.preview-images");
+          });
+        });
+      </script> -->

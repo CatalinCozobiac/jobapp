@@ -4,12 +4,17 @@ const express = require('express');
 const morgan = require('morgan');
 const expressLayouts=require('express-ejs-layouts')
 const session = require('express-session')
+// const fileUpload = require('express-fileupload');
 const cookieParser =  require('cookie-parser')
-
+const bodyParser = require('body-parser');
 const routes = require('./routes/router');
 const res = require('express/lib/response');
+var fs = require('fs');
+var path = require('path');
+var imgModel = require('./models/job');
 
 const app = express()
+// app.use(fileUpload());
 var port=3001
 var secret = process.env.SECRET
 
@@ -19,6 +24,8 @@ app.use(morgan(':method :host :status :param[id] :res[content-length] - :respons
 app.use(express.urlencoded({extended:true}))//passing data in url(hidden)
 app.use(express.static('public'))//path to the static files
 app.use(expressLayouts)//for using templates such as header ,footer ,body
+app.use(bodyParser.urlencoded({ extended: false })) //used for image handling
+app.use(bodyParser.json()) //used for image handling
 
 
 
@@ -44,6 +51,15 @@ app.use((req, res, next)=>{
   res.locals.user = req.session.user;
   next()
 })
+
+
+
+
+
+
+
+
+
 morgan.token('host', function(req, res) {
   return req.hostname;
 });
@@ -61,5 +77,5 @@ app.set('view engine','ejs')
 
 
 app.listen(port, () => {
-  console.log(`Demo app listening on port ${port}`)
+  console.log(`Job app listening on port ${port}`)
 })

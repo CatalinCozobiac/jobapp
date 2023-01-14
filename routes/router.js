@@ -1,24 +1,25 @@
 const express = require('express');
 const router = express.Router()
-
+const store = require('../middleware/uploader')
 const userController = require('../controllers/userController')
 
-/** Student Routes  */
-// router.get('/', userController.HomePage);
-// router.get('/create_student', studentController.CreatePage);
-// router.post('/create_student', studentController.CreateStudent);
+// /** Job Routes  */
+router.get('/', userController.HomePage);
 
-router.get('/about', userController.AboutPage);
-router.post('/about', userController.AboutPage);
+router.get('/dashboard', userController.DashBoard);
+router.post('/dashboard', userController.DashBoard);
+
+router.get('/create_job', userController.CreatePage);
+router.post('/create_job', userController.upload, userController.CreateJob);
 
 // // Update
-// router.get('/edit_student/:id', studentController.UpdateStudentPage);
-// router.post('/edit_student/:id', studentController.UpdateStudent);
+router.get('/edit_job/:id', userController.UpdateJobPage);
+router.post('/edit_job/:id', userController.UpdateJob);
 
 
 
 // //Delete
-// router.get('/delete_student/:id', studentController.DeleteStudent);
+router.get('/delete_job/:id', userController.DeleteJob);
 
 // //register
 
@@ -27,10 +28,11 @@ router.get('/register', userController.RegisterPage);
 router.post('/register', userController.RegisterUser);
 
 //login
-//router.get('/', studentController.HomePage);
+
 router.get('/login', userController.LoginPage);
-router.post('/login', userController.LoginUser, userController.AdminCheck);
+router.post('/login', userController.LoginUser);
 
 //logout
 router.get('/logout', userController.LogoutUser);
+
 module.exports=router

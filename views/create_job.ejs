@@ -1,0 +1,119 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Node.js upload images</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+      div.preview-images > img {
+        width: 20%;
+      }
+    </style>
+  </head>
+
+
+
+
+<div class="container">
+    <div class="title">
+        <h1> Job Posting</h1>
+    </div>
+    <form method="POST" action='/create_job' enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="subcontName">Subcontractor Name</label>
+            <input type="text" class="form-control" name="name">
+          </div>
+        <div class="form-group">
+            <label for="subcontEmail">Email address</label>
+            <input type="email" class="form-control"  name="email">
+          </div>
+          <div class="form-group">
+            <label for="jobLocation">Job Location</label>
+            <input type="text" class="form-control"  name="location">
+          </div>
+          <div class="form-group">
+            <label for="jobDescription">Job Description</label>
+            <textarea type="text" class="form-control"  name="jobd"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-8">
+            <input type="file" class="form-control" name="images" id="formFile">
+          </div>
+          <!-- <div class="col-2">
+            <input type="submit" class="btn btn-warning" value="Upload Images">
+          </div> -->
+          </div>
+          <div class="mt-5">
+            <div class="row">
+              <div class="col-3">
+                <div class="card shadow" style="width:18em">
+                  <img src="..." class="card-img-top" class="img-fluid" alt="...">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <br>
+          <button class="btn btn-primary">Submit Job</button>
+    
+        </form>
+    </div>
+
+
+          <!-- <div class="container">
+            <div class="row">
+              <div class="col-sm-20 mt-52">
+                <label>Upload image</label>
+      
+                <form class="mt-4"
+                  action="/upload"
+                  method="POST"
+                  enctype="multipart/form-data"
+                >
+                  <div class="form-group">
+                    <input
+                      type="file"
+                      name="file"
+                      multiple
+                      id="input-files"
+                      class="form-control-file border"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add picture</button>
+                </form>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="preview-images"></div>
+              </div>
+            </div>
+          </div>
+      
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+          <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+          <script>
+            $(document).ready(function() {
+              let imagesPreview = function(input, placeToInsertImagePreview) {
+                if (input.files) {
+                  let filesAmount = input.files.length;
+                  for (i = 0; i < filesAmount; i++) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                      $($.parseHTML("<img>"))
+                        .attr("src", event.target.result)
+                        .appendTo(placeToInsertImagePreview);
+                    };
+                    reader.readAsDataURL(input.files[i]);
+                  }
+                }
+              };
+              $("#input-files").on("change", function() {
+                imagesPreview(this, "div.preview-images");
+              });
+            });
+          </script>
+        <br> -->
